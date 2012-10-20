@@ -8,9 +8,9 @@ Gem::Specification.new do |gem|
   gem.version       = Add::To::Homescreen::Rails::VERSION
   gem.authors       = ["RogerE"]
   gem.email         = ["roger@webfokus.no"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.description   = "Provides the 'Add to Home screen' assets for your Rails application."
+  gem.summary       = "Use 'Add to Home screen' with Rails Asset Pipeline"
+  gem.homepage      = "https://github.com/RogerE/add-to-homescreen-rails"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
