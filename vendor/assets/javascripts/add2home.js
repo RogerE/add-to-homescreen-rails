@@ -1,5 +1,5 @@
 /*!
- * Add to Homescreen v2.0 ~ Copyright (c) 2012 Matteo Spinelli, http://cubiq.org
+ * Add to Homescreen v2.0.1 ~ Copyright (c) 2012 Matteo Spinelli, http://cubiq.org
  * Released under MIT license, http://cubiq.org/license
  */
 var addToHome = (function (w) {
@@ -12,6 +12,7 @@ var addToHome = (function (w) {
 		OSVersion,
 		startX = 0,
 		startY = 0,
+		lastVisit = 0,
 		isExpired,
 		isSessionActive,
 		isReturningVisitor,
@@ -39,7 +40,8 @@ var addToHome = (function (w) {
 
 		intl = {
 			ca_es: 'Per instal·lar aquesta aplicació al vostre %device premeu %icon i llavors <strong>Afegir a pantalla d\'inici</strong>.',
-			da_dk: 'Tilføj denne side til din %device: tryk på %icon og derefter <strong>Tilføj til hjemmeskærm</strong>.',
+			cs_cz: 'Pro instalaci aplikace na Váš %device, stiskněte %icon a v nabídce <strong>Přidat na plochu</strong>.',
+			da_dk: 'Tilføj denne side til din %device: tryk på %icon og derefter <strong>Føj til hjemmeskærm</strong>.',
 			de_de: 'Installieren Sie diese App auf Ihrem %device: %icon antippen und dann <strong>Zum Home-Bildschirm</strong>.',
 			el_gr: 'Εγκαταστήσετε αυτήν την Εφαρμογή στήν συσκευή σας %device: %icon μετά πατάτε <strong>Προσθήκη σε Αφετηρία</strong>.',
 			en_us: 'Install this web app on your %device: tap %icon and then <strong>Add to Home Screen</strong>.',
@@ -59,7 +61,7 @@ var addToHome = (function (w) {
 			ru_ru: 'Установите это веб-приложение на ваш %device: нажмите %icon, затем <strong>Добавить в «Домой»</strong>.',
 			sv_se: 'Lägg till denna webbapplikation på din %device: tryck på %icon och därefter <strong>Lägg till på hemskärmen</strong>.',
 			th_th: 'ติดตั้งเว็บแอพฯ นี้บน %device ของคุณ: แตะ %icon และ <strong>เพิ่มที่หน้าจอโฮม</strong>',
-			tr_tr: '%device için bu uygulamayı kurduktan sonra %icon simgesine dokunarak <strong>Ev Ekranına Ekle</strong>yin.',
+			tr_tr: '%device için bu uygulamayı kurduktan sonra %icon simgesine dokunarak <strong>Ana Ekrana Ekle</strong>yin.',
 			zh_cn: '您可以将此应用程式安装到您的 %device 上。请按 %icon 然后点选<strong>添加至主屏幕</strong>。',
 			zh_tw: '您可以將此應用程式安裝到您的 %device 上。請按 %icon 然後點選<strong>加入主畫面螢幕</strong>。'
 		};
@@ -68,11 +70,12 @@ var addToHome = (function (w) {
 		// Preliminary check, prevents all further checks to be performed on iDevices only
 		if ( !isIDevice ) return;
 
-		var now = Date.now();
+		var now = Date.now(),
+			i;
 
 		// Merge local with global options
 		if (w.addToHomeConfig) {
-			for ( var i in w.addToHomeConfig ) {
+			for ( i in w.addToHomeConfig ) {
 				options[i] = w.addToHomeConfig[i];
 			}
 		}
@@ -86,12 +89,15 @@ var addToHome = (function (w) {
 		OSVersion = nav.appVersion.match(/OS (\d+_\d+)/i);
 		OSVersion = OSVersion[1] ? +OSVersion[1].replace('_', '.') : 0;
 		
-		isExpired = +w.localStorage.getItem('addToHome') || now;
+		lastVisit = +w.localStorage.getItem('addToHome');
+
 		isSessionActive = w.sessionStorage.getItem('addToHomeSession');
-		isReturningVisitor = !options.returningVisitor || ( isExpired && isExpired + 28*24*60*60*1000 > now );			// You are considered a "returning visitor" if you access the site more than once/month
+		isReturningVisitor = options.returningVisitor ? lastVisit && lastVisit + 28*24*60*60*1000 > now : true;
+
+		if ( !lastVisit ) lastVisit = now;
 
 		// If it is expired we need to reissue a new balloon
-		isExpired = ( !options.expire || isExpired <= now );
+		isExpired = isReturningVisitor && lastVisit <= now;
 
 		if ( options.hookOnLoad ) w.addEventListener('load', loaded, false);
 		else if ( !options.hookOnLoad && options.autostart ) loaded();
@@ -100,11 +106,10 @@ var addToHome = (function (w) {
 	function loaded () {
 		w.removeEventListener('load', loaded, false);
 
-		if ( !overrideChecks && (!isSafari || !isExpired || isSessionActive || isStandalone || !isReturningVisitor) ) return;
+		if ( !isReturningVisitor ) w.localStorage.setItem('addToHome', Date.now());
+		else if ( options.expire && isExpired ) w.localStorage.setItem('addToHome', Date.now() + options.expire * 60000);
 
-		if ( options.expire || options.returningVisitor ) {
-			w.localStorage.setItem('addToHome', Date.now() + options.expire * 60000);
-		}
+		if ( !overrideChecks && ( !isSafari || !isExpired || isSessionActive || isStandalone || !isReturningVisitor ) ) return;
 
 		var icons = options.touchIcon ? document.querySelectorAll('head link[rel=apple-touch-icon],head link[rel=apple-touch-icon-precomposed]') : [],
 			sizes,
