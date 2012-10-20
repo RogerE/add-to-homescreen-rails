@@ -17,7 +17,7 @@ In your Gemfile, add:
 
 ```ruby
 group :assets do
-  gem 'add-to-home-screen-rails'
+  gem 'add-to-homescreen-rails'
 end
 ```
 
