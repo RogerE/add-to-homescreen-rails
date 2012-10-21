@@ -83,12 +83,11 @@ var addToHome = (function (w) {
 
 		isIPad = (/ipad/gi).test(nav.platform);
 		isRetina = w.devicePixelRatio && w.devicePixelRatio > 1;
-		isSafari = nav.appVersion.match(/Safari/gi);
+		isSafari = (/Safari/i).test(nav.appVersion) && !(/CriOS/i).test(nav.appVersion);
 		isStandalone = nav.standalone;
-		
 		OSVersion = nav.appVersion.match(/OS (\d+_\d+)/i);
 		OSVersion = OSVersion[1] ? +OSVersion[1].replace('_', '.') : 0;
-		
+
 		lastVisit = +w.localStorage.getItem('addToHome');
 
 		isSessionActive = w.sessionStorage.getItem('addToHomeSession');
