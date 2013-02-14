@@ -1,5 +1,5 @@
 /*!
- * Add to Homescreen v2.0.5 ~ Copyright (c) 2013 Matteo Spinelli, http://cubiq.org
+ * Add to Homescreen v2.0.6 ~ Copyright (c) 2013 Matteo Spinelli, http://cubiq.org
  * Released under MIT license, http://cubiq.org/license
  */
 var addToHome = (function (w) {
@@ -74,7 +74,6 @@ var addToHome = (function (w) {
 		if ( !isIDevice ) return;
 
 		var now = Date.now(),
-			title,
 			i;
 
 		// Merge local with global options
@@ -90,7 +89,7 @@ var addToHome = (function (w) {
 		isSafari = (/Safari/i).test(nav.appVersion) && !(/CriOS/i).test(nav.appVersion);
 		isStandalone = nav.standalone;
 		OSVersion = nav.appVersion.match(/OS (\d+_\d+)/i);
-		OSVersion = OSVersion[1] ? +OSVersion[1].replace('_', '.') : 0;
+		OSVersion = OSVersion && OSVersion[1] ? +OSVersion[1].replace('_', '.') : 0;
 
 		lastVisit = +w.localStorage.getItem('addToHome');
 
@@ -116,8 +115,7 @@ var addToHome = (function (w) {
 
 		var touchIcon = '',
 			platform = nav.platform.split(' ')[0],
-			language = nav.language.replace('-', '_'),
-			i, l;
+			language = nav.language.replace('-', '_');
 
 		balloon = document.createElement('div');
 		balloon.id = 'addToHomeScreen';
@@ -134,11 +132,10 @@ var addToHome = (function (w) {
 
 		if ( options.touchIcon ) {
 			touchIcon = isRetina ?
-				document.querySelector('head link[rel^=apple-touch-icon][sizes="114x114"],head link[rel^=apple-touch-icon][sizes="144x144"]') :
-				document.querySelector('head link[rel^=apple-touch-icon][sizes="57x57"],head link[rel^=apple-touch-icon],head link[rel^=apple-touch-icon][sizes="72x72"]');
+				document.querySelector('head link[rel^=apple-touch-icon][sizes="114x114"],head link[rel^=apple-touch-icon][sizes="144x144"],head link[rel^=apple-touch-icon]') :
+				document.querySelector('head link[rel^=apple-touch-icon][sizes="57x57"],head link[rel^=apple-touch-icon]');
 
 			if ( touchIcon ) {
-				alert(touchIcon.href)
 				touchIcon = '<span style="background-image:url(' + touchIcon.href + ')" class="addToHomeTouchIcon"></span>';
 			}
 		}
@@ -238,12 +235,15 @@ var addToHome = (function (w) {
 		clearTimeout( closeTimeout );
 		closeTimeout = null;
 
+		// check if the popup is displayed and prevent errors
+		if ( !balloon ) return;
+
 		var posY = 0,
 			posX = 0,
 			opacity = '1',
 			duration = '0';
 
-		if ( options.closeButton ) balloon.removeEventListener('click', close, false);
+		if ( options.closeButton ) balloon.removeEventListener('click', clicked, false);
 		if ( !isIPad && OSVersion >= 6 ) window.removeEventListener('orientationchange', orientationCheck, false);
 
 		if ( OSVersion < 5 ) {
@@ -258,20 +258,20 @@ var addToHome = (function (w) {
 				if ( isIPad ) {
 					duration = '0.4s';
 					opacity = '0';
-					posY = posY + 50;
+					posY += 50;
 				} else {
 					duration = '0.6s';
-					posY = posY + balloon.offsetHeight + options.bottomOffset + 50;
+					posY += balloon.offsetHeight + options.bottomOffset + 50;
 				}
 				break;
 			case 'bubble':
 				if ( isIPad ) {
 					duration = '0.8s';
-					posY = posY - balloon.offsetHeight - options.bottomOffset - 50;
+					posY -= balloon.offsetHeight + options.bottomOffset + 50;
 				} else {
 					duration = '0.4s';
 					opacity = '0';
-					posY = posY - 50;
+					posY -= 50;
 				}
 				break;
 			default:
