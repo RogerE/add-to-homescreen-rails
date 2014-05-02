@@ -1,3 +1,5 @@
+*IMPORTANT:* If you are upgrading please note that there are major changes to the way version 3 works. Make sure you read the updated documentation and also update your rails require statement as shown below.
+
 # 'Add to Home screen' for Rails
 
 This gem vendors the 'Add to Home screen' assets for Rails 3.1 and greater.
@@ -16,21 +18,19 @@ For the orignal javascript and css file go to his [Github repository](https://gi
 In your Gemfile, add:
 
 ```ruby
-group :assets do
-  gem 'add-to-homescreen-rails'
-end
+gem 'add-to-homescreen-rails'
 ```
 
 You can include it by adding the following to your javascript file:
 
 ```javascript
-//= require add2home
+//= require addtohomescreen
 ```
 
 And to the css file:
 
 ```css
 /*
- *= require add2home
+ *= require addtohomescreen
  */
 ```
