@@ -1,4 +1,4 @@
-/* Add to Homescreen v3.0.2 ~ (c) 2014 Matteo Spinelli ~ @license: http://cubiq.org/license */
+/* Add to Homescreen v3.0.3 ~ (c) 2014 Matteo Spinelli ~ @license: http://cubiq.org/license */
 (function (window, document) {
 /*
        _   _ _____     _____
@@ -79,7 +79,7 @@ _extend(ath, {
 	isIDevice: (/iphone|ipod|ipad/i).test(_ua),
 	isMobileChrome: _ua.indexOf('Android') > -1 && (/Chrome\/[.0-9]*/).test(_ua),
 	isMobileIE: _ua.indexOf('Windows Phone') > -1,
-	language: _nav.language && _nav.language.toLowerCase().replace('-', '_')
+	language: _nav.language && _nav.language.toLowerCase().replace('-', '_') || 'en_us'
 });
 
 // normalize language string so it always looks like aa_bb
