@@ -1,4 +1,4 @@
-/* Add to Homescreen v3.0.3 ~ (c) 2014 Matteo Spinelli ~ @license: http://cubiq.org/license */
+/* Add to Homescreen v3.0.4 ~ (c) 2014 Matteo Spinelli ~ @license: http://cubiq.org/license */
 (function (window, document) {
 /*
        _   _ _____     _____
@@ -35,9 +35,14 @@ ath.intl = {
 		action: { ios: 'Add to Home Screen', android: 'Add to homescreen', windows: 'pin to start' }
 	},
 
+	es_es: {
+		message: 'Para añadir esta aplicación web a la pantalla de inicio: pulsa %icon y selecciona <strong>%action</strong>.',
+		action: { ios: 'Añadir a pantalla de inicio', android: 'Añadir a pantalla de inicio', windows: 'Añadir a inicio' }
+	},
+
 	it_it: {
 		message: 'Per Aggiungere questa web app alla schermata iniziale: premi %icon e poi <strong>%action</strong>.',
-		action: { ios: 'Aggiungi a Home', android: 'Aggiungi alla homescreen', windows: 'pin to start' }
+		action: { ios: 'Aggiungi a Home', android: 'Aggiungi alla homescreen', windows: 'aggiungi a start' }
 	},
 
 	nl_nl: {
@@ -79,11 +84,15 @@ _extend(ath, {
 	isIDevice: (/iphone|ipod|ipad/i).test(_ua),
 	isMobileChrome: _ua.indexOf('Android') > -1 && (/Chrome\/[.0-9]*/).test(_ua),
 	isMobileIE: _ua.indexOf('Windows Phone') > -1,
-	language: _nav.language && _nav.language.toLowerCase().replace('-', '_') || 'en_us'
+	language: _nav.language && _nav.language.toLowerCase().replace('-', '_') || ''
 });
 
 // normalize language string so it always looks like aa_bb
-ath.language = ath.language.length == 2 && ath.language + '_' + ath.language;
+if ( ath.language.length == 2 ) {
+	ath.language += '_' + ath.language;
+}
+// falls back to en_us if language is unsupported
+ath.language = ath.language && ath.language in ath.intl ? ath.language : 'en_us';
 
 ath.isMobileSafari = ath.isIDevice && _ua.indexOf('Safari') > -1 && _ua.indexOf('CriOS') < 0;
 ath.OS = ath.isIDevice ? 'ios' : ath.isMobileChrome ? 'android' : ath.isMobileIE ? 'windows' : 'unsupported';
@@ -95,9 +104,6 @@ ath.isStandalone = window.navigator.standalone || ( ath.isMobileChrome && ( scre
 ath.isTablet = (ath.isMobileSafari && _ua.indexOf('iPad') > -1) || (ath.isMobileChrome && _ua.indexOf('Mobile') < 0);
 
 ath.isCompatible = (ath.isMobileSafari && ath.OSVersion >= 6) || ath.isMobileChrome;	// TODO: add winphone
-
-// falls back to en_us if language is unsupported
-ath.language = ath.language && ath.language in ath.intl ? ath.language : 'en_us';
 
 var _defaultSession = {
 	lastDisplayTime: 0,			// last time we displayed the message
