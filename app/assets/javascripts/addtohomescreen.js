@@ -1,4 +1,4 @@
-/* Add to Homescreen v3.0.6 ~ (c) 2014 Matteo Spinelli ~ @license: http://cubiq.org/license */
+/* Add to Homescreen v3.0.7 ~ (c) 2014 Matteo Spinelli ~ @license: http://cubiq.org/license */
 (function (window, document) {
 /*
        _   _ _____     _____
@@ -50,14 +50,29 @@ ath.intl = {
 		action: { ios: 'Añadir a pantalla de inicio', android: 'Añadir a pantalla de inicio', windows: 'Añadir a inicio' }
 	},
 
+	fr_fr: {
+		message: 'Pour ajouter cette application web sur l\'écran d\'accueil : Appuyez %icon et sélectionnez <strong>%action</strong>.',
+		action: { ios: 'Ajouter sur l\'écran d\'accueil', android: 'Ajouter à l\'écran d\'accueil', windows: 'Épingler à l\'écran d\'accueil' }
+	},
+
 	it_it: {
 		message: 'Per Aggiungere questa web app alla schermata iniziale: premi %icon e poi <strong>%action</strong>.',
 		action: { ios: 'Aggiungi a Home', android: 'Aggiungi alla homescreen', windows: 'aggiungi a start' }
 	},
 
+	nb_no: {
+		message: 'For å installere denne appen på hjem-skjermen: trykk på %icon og deretter <strong>%action</strong>.',
+		action: { ios: 'Legg til på Hjem-skjerm', android: 'Legg til på startsiden', windows: 'fest til start' }
+	},
+
 	nl_nl: {
 		message: 'Om deze webapp op je telefoon te installeren, klik op %icon en dan <strong>%action</strong>.',
 		action: { ios: 'Voeg toe aan beginscherm', android: 'Toevoegen aan startscherm', windows: 'Aan startscherm vastmaken' }
+	},
+
+	sv_se: {
+		message: 'För att lägga till denna webbapplikation på hemskärmen: tryck på %icon och därefter <strong>%action</strong>.',
+		action: { ios: 'Lägg till på hemskärmen', android: 'Lägg til på startskärmen', windows: 'fäst på startskärmen' }
 	},
 
 	zh_cn: {
@@ -70,6 +85,11 @@ ath.intl = {
 		action: { ios: '加至主屏幕', android: '加至主屏幕', windows: '按住啟動' }
 	}
 };
+
+// Add 2 characters language support (Android mostly)
+for ( var lang in ath.intl ) {
+	ath.intl[lang.substr(0, 2)] = ath.intl[lang];
+}
 
 // default options
 ath.defaults = {
@@ -107,10 +127,6 @@ _extend(ath, {
 	language: _nav.language && _nav.language.toLowerCase().replace('-', '_') || ''
 });
 
-// normalize language string so it always looks like aa_bb
-if ( ath.language.length == 2 ) {
-	ath.language += '_' + ath.language;
-}
 // falls back to en_us if language is unsupported
 ath.language = ath.language && ath.language in ath.intl ? ath.language : 'en_us';
 
