@@ -117,6 +117,7 @@ ath.defaults = {
 
 // browser info and capability
 var _ua = window.navigator.userAgent;
+
 var _nav = window.navigator;
 _extend(ath, {
 	hasToken: document.location.hash == '#ath' || _reSmartURL.test(document.location.href) || _reQueryString.test(document.location.search),
@@ -174,14 +175,15 @@ ath.Class = function (options) {
 	if ( this.options.debug ) {
 		ath.isCompatible = true;
 		ath.OS = typeof this.options.debug == 'string' ? this.options.debug : ath.OS == 'unsupported' ? 'android' : ath.OS;
-		ath.OSVersion = ath.OS == 'ios' ? '7' : '4';
+		ath.OSVersion = ath.OS == 'ios' ? '8' : '4';
 	}
 
 	// the element the message will be appended to
 	this.container = document.documentElement;
 
 	// load session
-	this.session = JSON.parse(localStorage.getItem(this.options.appID));
+	this.session = localStorage.getItem(this.options.appID);
+	this.session = this.session ? JSON.parse(this.session) : undefined;
 
 	// user most likely came from a direct link containing our token, we don't need it and we remove it
 	if ( ath.hasToken && ( !ath.isCompatible || !this.session ) ) {
