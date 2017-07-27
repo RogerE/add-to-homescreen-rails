@@ -1,6 +1,8 @@
-*IMPORTANT:* If you are upgrading please note that there are major changes to the way version 3 works. Make sure you read the updated documentation and also update your rails require statement as shown below.
+# THIS GEM IS NOT LONGER UPDATED
 
-# 'Add to Home screen' for Rails
+If you require newer versions of the asset files you can download them from the [Add to Homescreen repository](https://github.com/cubiq/add-to-homescreen).
+
+## Intro
 
 This gem vendors the 'Add to Home screen' assets for Rails 3.1 and greater.
 The files will be added to the asset pipeline and available for you to use.
