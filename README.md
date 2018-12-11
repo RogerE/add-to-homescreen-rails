@@ -1,4 +1,4 @@
-# THIS GEM IS NOT LONGER UPDATED
+# THIS GEM IS NO LONGER UPDATED
 
 If you require newer versions of the asset files you can download them from the [Add to Homescreen repository](https://github.com/cubiq/add-to-homescreen).
 
